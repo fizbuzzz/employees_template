@@ -8,6 +8,8 @@ const AppFilter = ({onToggleShow, currentFilter}) => {
         {name: 'increase', label: 'На повышение'},
         {name: 'moreThan1000', label: 'З/П больше 1000$'},
         {name: 'moreThan5000', label: 'З/П больше 5000$'},
+        {name: 'man', label: 'Мужчины'},
+        {name: 'woman', label: 'Женщины'}
     ]
   
 

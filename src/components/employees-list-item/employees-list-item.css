@@ -63,3 +63,7 @@
     color: #aeaeae;
 }
   
+
+.list-group-item-input::after {
+    content: '123';
+}

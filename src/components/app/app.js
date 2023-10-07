@@ -6,6 +6,7 @@ import SearchPanel from '../search-panel/search-panel';
 import AppFilter from '../app-filter/app-filter';
 import EmployeesList from '../employees-list/employees-list';
 import EmployeesAddForm from '../employees-add-form/employees-add-form';
+import ErrorMessage from '../error-message/error-message';
 
 import './app.css';
 
@@ -14,8 +15,22 @@ class App extends Component {
     super(props);
     this.state = {
       data : [
-        {name : "Ivan", gender: 'man' , salary : 300, increase:true,  rise: false, id:1} ,
-        {name:"Zelya" ,  gender: 'man' , salary:3000, increase:false, rise: false, id:2},
+        {name: "Ivan", gender: "man", salary: 1000, increase: true, rise: false, id: 1},
+        {name: "Alex", gender: "man", salary: 2200, increase: false, rise: true, id: 2},
+        {name: "Maria", gender: "woman", salary: 300, increase: true, rise: true, id: 3},
+        {name: "John", gender: "man", salary: 3700, increase: false, rise: false, id: 4},
+        {name: "Sarah", gender: "woman", salary: 5100, increase: false, rise: false, id: 5},
+        {name: "Michael", gender: "man", salary: 6000, increase: false, rise: true, id: 6},
+        {name: "Emily", gender: "woman", salary: 1800, increase: false, rise: true, id: 7},
+        {name: "David", gender: "man", salary: 500, increase: true, rise: false, id: 8},
+        {name: "Olivia", gender: "woman", salary: 5500, increase: false, rise: false, id: 9},
+        {name: "James", gender: "man", salary: 1950, increase: true, rise: true, id: 10},
+        {name: "Sophia", gender: "woman", salary: 5300, increase: false, rise: true, id: 11},
+        {name: "William", gender: "man", salary: 800, increase: true, rise: false, id: 12},
+        {name: "Emma", gender: "woman", salary: 770, increase: true, rise: false, id: 13},
+        {name: "Daniel", gender: "man", salary: 600, increase: true, rise: true, id: 14},
+        {name: "Ava", gender: "woman", salary: 1500, increase: false, rise: true, id: 15},
+
       ],
       
       term: '',
@@ -45,10 +60,11 @@ class App extends Component {
     })
   }
 
-  addItem = (name , salary) => {
+  addItem = (name , salary, gender) => {
     const newEmpl = {
       name,
       salary,
+      gender,
       cookie: false,
       rise: false,
       id: this.maxId++
@@ -152,30 +168,71 @@ class App extends Component {
     this.setState({filter : value})
   }
 
+  elemToShow = (filter, data) => {
+    switch(filter) {
+      case 'all':
+        return data;
+      case 'increase': 
+        return data.filter(item => item.increase);
+      case 'moreThan1000':
+        return data.filter(item => item.salary > 1000);
+      case 'moreThan5000': 
+        return data.filter(item => item.salary > 5000);
+      case 'man': 
+        return  data.filter(item => item.gender === 'man');
+      case 'woman': 
+        return data.filter(item => item.gender === 'woman');
+      default:
+        return data;
+  }
+}
+
+
+
+  onSalaryChange = (id, newSalary) => {
+    this.setState(({data}) => {
+      return {
+        data: data.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              salary: +newSalary.slice(0,-1),
+              
+            }
+          }
+          return item
+        })
+      }
+    })
+  }
 
   render () {
     let {data, term, filter} = this.state;
     const amount = data.length
     const onRise = data.filter(elem => elem.increase).length;
-    const visibleData = this.searchEmp(data, term);
-    const onShowIncrease = visibleData.filter(item => item.increase);
-    const onShowSalary_1000 =  visibleData.filter(item => item.salary > 1000);
-    const onShowSalary_5000 = visibleData.filter(item => item.salary > 5000);
+    const visibleData = this.elemToShow(filter, this.searchEmp(data, term)); 
+ 
 
-    const elemToShow = (filter) => {
-      switch(filter) {
-        case 'all':
-          return visibleData;
-        case 'increase': 
-          return onShowIncrease
-        case 'moreThan1000':
-          return onShowSalary_1000
-        case 'moreThan5000': 
-          return onShowSalary_5000
-        default:
-          return visibleData;
+
+    const componentToShow = (arg) => {
+      if (arg.length !== 0) {
+        return (
+          <EmployeesList  
+            list={arg}
+            onDelete={this.deleteItem}
+            // onToggleIncrease={this.onToggleIncrease}
+            // onToggleRise={this.onToggleRise}
+            onToggleProp={this.onToggleProp}
+            onSalaryChange={this.onSalaryChange}
+            />
+           
+        )
+      } else {
+        return (
+          <ErrorMessage/>
+        )
+      }
     }
-  }
     return (
       <div className="app">
           <AppInfo
@@ -192,13 +249,15 @@ class App extends Component {
               />
           </div>
           
-          <EmployeesList  
+
+          {componentToShow(visibleData)}
+          {/* <EmployeesList  
           list={elemToShow(filter)}
           onDelete={this.deleteItem}
           // onToggleIncrease={this.onToggleIncrease}
           // onToggleRise={this.onToggleRise}
           onToggleProp={this.onToggleProp}
-          />
+          /> */}
           <EmployeesAddForm
           onAdd={this.addItem}
           />

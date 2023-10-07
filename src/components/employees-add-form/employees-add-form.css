@@ -15,3 +15,15 @@
     width: 350px;
     margin-right: 20px;
 }
+
+.fa-solid.fa-person,
+.fa-solid.fa-person-dress {
+    transition: .2s ease;
+}
+
+.fa-solid.fa-person:hover,
+.fa-solid.fa-person-dress:hover {
+    color:#cbd8e84f !important ;
+    transition: .2s ease;
+
+}

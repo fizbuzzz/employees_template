@@ -1,0 +1,7 @@
+.error-message {
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 275px;
+}
